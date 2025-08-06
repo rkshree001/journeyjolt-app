@@ -1,0 +1,16 @@
+{
+  "appId": "app.lovable.30f2a15de4bb470cb05892a4140506b8",
+  "appName": "journeyjolt-app",
+  "webDir": "dist",
+  "server": {
+    "url": "https://30f2a15d-e4bb-470c-b058-92a4140506b8.lovableproject.com?forceHideBadge=true",
+    "cleartext": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#ffffff",
+      "showSpinner": false
+    }
+  }
+}
