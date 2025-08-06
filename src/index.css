@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* TripMate Design System - Modern Travel App */
+
+@layer base {
+  :root {
+    /* Core Background & Text */
+    --background: 0 0% 100%;
+    --foreground: 220 15% 15%;
+    
+    /* Primary - Adventure Blue */
+    --primary: 214 88% 56%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 214 100% 70%;
+    
+    /* Secondary - Sunset Orange */
+    --secondary: 25 95% 55%;
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Accent - Nature Green */
+    --accent: 154 64% 52%;
+    --accent-foreground: 0 0% 100%;
+    
+    /* UI Elements */
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 15%;
+    
+    /* Muted Elements */
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 8% 46%;
+    
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Borders & Inputs */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 214 88% 56%;
+    
+    /* Border Radius */
+    --radius: 0.75rem;
+    
+    /* Travel-specific gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(214 88% 56%), hsl(25 95% 55%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(220 14% 98%));
+    --gradient-sunset: linear-gradient(135deg, hsl(25 95% 55%), hsl(15 100% 65%));
+    --gradient-ocean: linear-gradient(135deg, hsl(214 88% 56%), hsl(195 85% 55%));
+    --gradient-nature: linear-gradient(135deg, hsl(154 64% 52%), hsl(120 60% 50%));
+    
+    /* Shadows */
+    --shadow-soft: 0 2px 10px hsl(220 20% 80% / 0.1);
+    --shadow-medium: 0 4px 20px hsl(220 20% 60% / 0.15);
+    --shadow-strong: 0 10px 40px hsl(220 20% 40% / 0.2);
+    --shadow-glow: 0 0 30px hsl(214 88% 56% / 0.3);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .dark {
+    --background: 220 20% 6%;
+    --foreground: 220 14% 96%;
+    
+    --primary: 214 88% 65%;
+    --primary-foreground: 220 20% 6%;
+    --primary-glow: 214 100% 80%;
+    
+    --secondary: 25 95% 60%;
+    --secondary-foreground: 220 20% 6%;
+    
+    --accent: 154 64% 58%;
+    --accent-foreground: 220 20% 6%;
+    
+    --card: 220 18% 8%;
+    --card-foreground: 220 14% 96%;
+    --popover: 220 18% 8%;
+    --popover-foreground: 220 14% 96%;
+    
+    --muted: 220 18% 12%;
+    --muted-foreground: 220 8% 65%;
+    
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 220 20% 6%;
+    
+    --border: 220 18% 15%;
+    --input: 220 18% 15%;
+    --ring: 214 88% 65%;
+    
+    /* Dark mode gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(214 88% 65%), hsl(25 95% 60%));
+    --gradient-card: linear-gradient(135deg, hsl(220 18% 8%), hsl(220 18% 12%));
+    --gradient-sunset: linear-gradient(135deg, hsl(25 95% 60%), hsl(15 100% 70%));
+    --gradient-ocean: linear-gradient(135deg, hsl(214 88% 65%), hsl(195 85% 60%));
+    --gradient-nature: linear-gradient(135deg, hsl(154 64% 58%), hsl(120 60% 55%));
+    
+    --shadow-soft: 0 2px 10px hsl(220 40% 2% / 0.5);
+    --shadow-medium: 0 4px 20px hsl(220 40% 2% / 0.6);
+    --shadow-strong: 0 10px 40px hsl(220 40% 2% / 0.8);
+    --shadow-glow: 0 0 30px hsl(214 88% 65% / 0.4);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/50 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary;
+  }
+}
+
+@layer components {
+  /* Custom gradient backgrounds */
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .bg-gradient-card {
+    background: var(--gradient-card);
+  }
+  
+  .bg-gradient-sunset {
+    background: var(--gradient-sunset);
+  }
+  
+  .bg-gradient-ocean {
+    background: var(--gradient-ocean);
+  }
+  
+  .bg-gradient-nature {
+    background: var(--gradient-nature);
+  }
+  
+  /* Custom shadows */
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
+  }
+  
+  .shadow-strong {
+    box-shadow: var(--shadow-strong);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  /* Smooth transitions */
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+  
+  /* Glass effect */
+  .glass {
+    @apply backdrop-blur-md bg-white/10 border border-white/20;
+  }
+  
+  .glass-dark {
+    @apply backdrop-blur-md bg-black/10 border border-black/20;
+  }
+}
