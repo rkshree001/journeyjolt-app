@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">journeyjolt</string>
+    <string name="title_activity_main">journeyjolt</string>
+    <string name="package_name">com.journeyjolt.app</string>
+    <string name="custom_url_scheme">com.journeyjolt.app</string>
+</resources>
