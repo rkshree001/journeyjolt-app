@@ -1,1 +1,0 @@
-if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/journeyjolt-app/sw.js', { scope: '/journeyjolt-app/' })})}
