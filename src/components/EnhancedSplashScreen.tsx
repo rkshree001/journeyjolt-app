@@ -69,23 +69,34 @@ const EnhancedSplashScreen = ({ onComplete, onSkip }: SplashScreenProps) => {
 
   return (
     <div
-      className={`fixed inset-0 bg-gradient-hero flex flex-col z-50 transition-all duration-500 ${
+      className={`fixed inset-0 w-screen h-screen flex flex-col z-50 transition-all duration-500 ${
         isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
       }`}
     >
-      {/* Background Animation */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-white/10 rounded-full animate-pulse"></div>
-        <div className="absolute top-3/4 right-1/4 w-24 h-24 bg-white/5 rounded-full animate-bounce" style={{ animationDelay: "0.5s" }}></div>
-        <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-white/5 rounded-full animate-ping" style={{ animationDelay: "1s" }}></div>
+      {/* Full-screen Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ 
+          backgroundImage: `url('/lovable-uploads/1abc93bf-156e-4629-a325-0c658ecbfde3.png')`,
+        }}
+      >
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/80 via-purple-600/70 to-indigo-800/80"></div>
+        
+        {/* Background Animation */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-white/10 rounded-full animate-pulse"></div>
+          <div className="absolute top-3/4 right-1/4 w-24 h-24 bg-white/5 rounded-full animate-bounce" style={{ animationDelay: "0.5s" }}></div>
+          <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-white/5 rounded-full animate-ping" style={{ animationDelay: "1s" }}></div>
+        </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center text-center space-y-8 z-10 px-6">
+      <div className="flex-1 flex items-center justify-center text-center space-y-8 z-10 px-6 relative">
         {/* Enhanced Logo */}
         <div className="relative">
           <div className="animate-bounce">
-            <div className="relative inline-flex items-center justify-center w-32 h-32 bg-white/20 backdrop-blur-lg rounded-3xl shadow-glow">
+            <div className="relative inline-flex items-center justify-center w-32 h-32 bg-white/20 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30">
               <CreditCard className="w-12 h-12 text-white animate-pulse" />
               <Wallet className="w-8 h-8 text-white absolute -bottom-2 -right-2 animate-ping" />
               <Sparkles className="w-6 h-6 text-white absolute -top-1 -left-1 animate-pulse" style={{ animationDelay: "0.5s" }} />
@@ -103,7 +114,7 @@ const EnhancedSplashScreen = ({ onComplete, onSkip }: SplashScreenProps) => {
 
         {/* App Branding */}
         <div className="space-y-4">
-          <h1 className="text-5xl font-bold text-white tracking-wide">
+          <h1 className="text-5xl md:text-6xl font-bold text-white tracking-wide drop-shadow-lg">
             TripWise<span className="text-yellow-300">Pay</span>
           </h1>
           <div className="flex items-center justify-center gap-4 text-white/90">
@@ -127,51 +138,57 @@ const EnhancedSplashScreen = ({ onComplete, onSkip }: SplashScreenProps) => {
         {/* Enhanced Loading */}
         <div className="space-y-4 w-80 max-w-sm">
           {/* Progress Bar */}
-          <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
+          <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden backdrop-blur-sm">
             <div 
-              className="h-full bg-gradient-to-r from-yellow-300 to-orange-300 rounded-full transition-all duration-200 shadow-glow"
+              className="h-full bg-gradient-to-r from-yellow-300 to-orange-300 rounded-full transition-all duration-200 shadow-lg"
               style={{ width: `${loadingProgress}%` }}
             ></div>
           </div>
           
           {/* Loading Text */}
-          <div className="text-white/80 text-sm font-medium h-6 flex items-center justify-center">
-            <span className="animate-fade-in" key={currentText}>
+          <div className="text-white/90 text-sm font-medium h-6 flex items-center justify-center">
+            <span className="animate-fade-in drop-shadow-sm" key={currentText}>
               {loadingTexts[currentText]}
             </span>
           </div>
           
           {/* Loading Percentage */}
-          <div className="text-white/60 text-xs font-medium">
+          <div className="text-white/70 text-xs font-medium">
             {Math.round(loadingProgress)}%
           </div>
         </div>
 
         {/* Floating Elements */}
         <div className="flex justify-center space-x-6">
-          <div className="w-3 h-3 bg-yellow-300/60 rounded-full animate-bounce"></div>
-          <div className="w-3 h-3 bg-orange-300/60 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-          <div className="w-3 h-3 bg-green-300/60 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+          <div className="w-3 h-3 bg-yellow-300/60 rounded-full animate-bounce shadow-lg"></div>
+          <div className="w-3 h-3 bg-orange-300/60 rounded-full animate-bounce shadow-lg" style={{ animationDelay: "0.2s" }}></div>
+          <div className="w-3 h-3 bg-green-300/60 rounded-full animate-bounce shadow-lg" style={{ animationDelay: "0.4s" }}></div>
         </div>
       </div>
 
-      {/* Bottom Navigation */}
-      <div className={`px-6 pb-8 transition-all duration-500 ${showBottomNav ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-        <div className="flex justify-between items-center">
+      {/* Floating Bottom Navigation */}
+      <div className={`fixed bottom-0 left-0 right-0 px-6 pb-8 pt-4 bg-gradient-to-t from-black/50 via-black/20 to-transparent backdrop-blur-sm transition-all duration-500 ${showBottomNav ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className="flex justify-between items-center max-w-md mx-auto">
           <Button 
             variant="ghost" 
-            className="text-white/80 hover:text-white hover:bg-white/10"
+            className="text-white/90 hover:text-white hover:bg-white/20 backdrop-blur-sm border border-white/20 px-6 py-3 rounded-full shadow-lg"
             onClick={handleSkip}
+            size="lg"
           >
             Skip
           </Button>
+          
+          <div className="text-white/60 text-sm font-medium">
+            {Math.round(loadingProgress)}% Complete
+          </div>
+          
           <Button 
-            variant="secondary" 
-            className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+            className="bg-white/90 hover:bg-white text-gray-900 font-semibold px-6 py-3 rounded-full shadow-lg backdrop-blur-sm border border-white/30 transition-all duration-200 hover:scale-105"
             onClick={handleNext}
             disabled={loadingProgress < 100}
+            size="lg"
           >
-            Next
+            {loadingProgress >= 100 ? 'Get Started' : 'Loading...'}
           </Button>
         </div>
       </div>
