@@ -178,42 +178,41 @@ const EnhancedOnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
         </div>
       </div>
 
-      {/* Enhanced Navigation - Fixed at bottom */}
-      <div className="relative z-10 px-6 py-6 bg-gradient-to-t from-black/40 via-black/20 to-transparent safe-area-inset-bottom">
-        <div className="flex justify-between items-center max-w-md mx-auto">
+      {/* Enhanced Navigation - Fixed at bottom with proper button styling */}
+      <div className="relative z-10 px-6 py-6 bg-gradient-to-t from-black/60 via-black/30 to-transparent safe-area-inset-bottom">
+        <div className="flex justify-between items-center max-w-md mx-auto gap-4">
           <Button
-            variant="ghost"
+            variant="outline"
             onClick={prevStep}
             disabled={currentStep === 0}
-            className="flex items-center gap-2 text-white hover:bg-white/20 disabled:opacity-30 transition-all duration-200 min-w-[80px]"
+            className="flex items-center gap-2 bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/50 disabled:opacity-30 transition-all duration-200 backdrop-blur-sm"
             size="lg"
           >
             <ChevronLeft className="w-5 h-5" />
             Back
           </Button>
 
-          {/* Skip option - always visible for clarity */}
+          {/* Center content with skip and progress */}
           <div className="flex flex-col items-center gap-2">
             {currentStep < onboardingData.length - 1 && (
               <Button
                 variant="ghost"
                 onClick={onComplete}
-                className="text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200 text-sm"
-                size="sm"
+                className="text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 text-sm px-4 py-1 h-auto"
               >
                 Skip
               </Button>
             )}
             
             {/* Step indicator */}
-            <div className="text-white/50 text-sm font-medium">
+            <div className="text-white/60 text-xs font-medium">
               {currentStep + 1} of {onboardingData.length}
             </div>
           </div>
 
           <Button
             onClick={nextStep}
-            className="flex items-center gap-2 bg-white text-gray-900 hover:bg-white/90 shadow-lg px-6 transition-all duration-200 hover:scale-105 min-w-[100px]"
+            className="flex items-center gap-2 bg-white text-gray-900 hover:bg-white/90 shadow-lg transition-all duration-200 hover:scale-105 font-semibold"
             size="lg"
           >
             {currentStep === onboardingData.length - 1 ? (
