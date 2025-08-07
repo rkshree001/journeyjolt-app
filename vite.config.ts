@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => ({
 base: "/journeyjolt-app/",
   server: {
     host: true,
-    port: 3000,
+    port: 8080,
   },
   plugins: [
     react(),
