@@ -40,7 +40,7 @@ const HomeScreen = ({ onCreateTrip, onShowProfile, onShowExplore }: HomeScreenPr
       <div className="bg-gradient-hero px-6 pt-12 pb-8">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-white">TripMate</h1>
+            <h1 className="text-2xl font-bold text-white">TripWisePay</h1>
             <p className="text-white/80">Plan your next adventure</p>
           </div>
           <Button variant="glass" size="icon" className="text-white" onClick={onShowProfile}>

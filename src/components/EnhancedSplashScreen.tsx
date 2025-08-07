@@ -1,24 +1,32 @@
 import { useEffect, useState } from "react";
-import { Plane, MapPin, Sparkles } from "lucide-react";
+import { Plane, MapPin, Sparkles, CreditCard, Wallet } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface SplashScreenProps {
   onComplete: () => void;
+  onSkip?: () => void;
 }
 
-const EnhancedSplashScreen = ({ onComplete }: SplashScreenProps) => {
+const EnhancedSplashScreen = ({ onComplete, onSkip }: SplashScreenProps) => {
   const [isVisible, setIsVisible] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [currentText, setCurrentText] = useState(0);
+  const [showBottomNav, setShowBottomNav] = useState(false);
 
   const loadingTexts = [
     "Initializing your journey...",
     "Loading amazing destinations...",
     "Preparing expense tracking...",
-    "Setting up group features...",
+    "Setting up smart payments...",
     "Almost ready to explore!"
   ];
 
   useEffect(() => {
+    // Show bottom navigation after 1 second
+    const navTimer = setTimeout(() => {
+      setShowBottomNav(true);
+    }, 1000);
+
     // Simulate loading progress
     const progressInterval = setInterval(() => {
       setLoadingProgress(prev => {
@@ -26,31 +34,42 @@ const EnhancedSplashScreen = ({ onComplete }: SplashScreenProps) => {
           clearInterval(progressInterval);
           return 100;
         }
-        return prev + 2;
+        return prev + 1.5;
       });
-    }, 40);
+    }, 50);
 
     // Change loading text
     const textInterval = setInterval(() => {
       setCurrentText(prev => (prev + 1) % loadingTexts.length);
-    }, 800);
+    }, 1000);
 
     // Complete splash after loading
     const timer = setTimeout(() => {
       setIsVisible(false);
       setTimeout(onComplete, 500);
-    }, 3000);
+    }, 4000);
 
     return () => {
+      clearTimeout(navTimer);
       clearInterval(progressInterval);
       clearInterval(textInterval);
       clearTimeout(timer);
     };
   }, [onComplete]);
 
+  const handleSkip = () => {
+    setIsVisible(false);
+    setTimeout(onSkip || onComplete, 300);
+  };
+
+  const handleNext = () => {
+    setIsVisible(false);
+    setTimeout(onComplete, 300);
+  };
+
   return (
     <div
-      className={`fixed inset-0 bg-gradient-hero flex items-center justify-center z-50 transition-all duration-500 ${
+      className={`fixed inset-0 bg-gradient-hero flex flex-col z-50 transition-all duration-500 ${
         isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
       }`}
     >
@@ -61,13 +80,14 @@ const EnhancedSplashScreen = ({ onComplete }: SplashScreenProps) => {
         <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-white/5 rounded-full animate-ping" style={{ animationDelay: "1s" }}></div>
       </div>
 
-      <div className="text-center space-y-8 z-10">
+      {/* Main Content */}
+      <div className="flex-1 flex items-center justify-center text-center space-y-8 z-10 px-6">
         {/* Enhanced Logo */}
         <div className="relative">
           <div className="animate-bounce">
             <div className="relative inline-flex items-center justify-center w-32 h-32 bg-white/20 backdrop-blur-lg rounded-3xl shadow-glow">
-              <Plane className="w-16 h-16 text-white animate-pulse" />
-              <MapPin className="w-8 h-8 text-white absolute -bottom-2 -right-2 animate-ping" />
+              <CreditCard className="w-12 h-12 text-white animate-pulse" />
+              <Wallet className="w-8 h-8 text-white absolute -bottom-2 -right-2 animate-ping" />
               <Sparkles className="w-6 h-6 text-white absolute -top-1 -left-1 animate-pulse" style={{ animationDelay: "0.5s" }} />
             </div>
           </div>
@@ -84,7 +104,7 @@ const EnhancedSplashScreen = ({ onComplete }: SplashScreenProps) => {
         {/* App Branding */}
         <div className="space-y-4">
           <h1 className="text-5xl font-bold text-white tracking-wide">
-            Journey<span className="text-yellow-300">Jolt</span>
+            TripWise<span className="text-yellow-300">Pay</span>
           </h1>
           <div className="flex items-center justify-center gap-4 text-white/90">
             <div className="flex items-center gap-2">
@@ -94,22 +114,22 @@ const EnhancedSplashScreen = ({ onComplete }: SplashScreenProps) => {
             <div className="w-1 h-1 bg-white/60 rounded-full"></div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-orange-300 rounded-full animate-pulse" style={{ animationDelay: "0.3s" }}></div>
-              <span className="text-lg font-medium">Share</span>
+              <span className="text-lg font-medium">Pay</span>
             </div>
             <div className="w-1 h-1 bg-white/60 rounded-full"></div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse" style={{ animationDelay: "0.6s" }}></div>
-              <span className="text-lg font-medium">Explore</span>
+              <span className="text-lg font-medium">Travel</span>
             </div>
           </div>
         </div>
 
         {/* Enhanced Loading */}
-        <div className="space-y-4 w-80">
+        <div className="space-y-4 w-80 max-w-sm">
           {/* Progress Bar */}
-          <div className="w-full bg-white/20 rounded-full h-2 overflow-hidden">
+          <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-yellow-300 to-orange-300 rounded-full transition-all duration-100 animate-pulse"
+              className="h-full bg-gradient-to-r from-yellow-300 to-orange-300 rounded-full transition-all duration-200 shadow-glow"
               style={{ width: `${loadingProgress}%` }}
             ></div>
           </div>
@@ -122,8 +142,8 @@ const EnhancedSplashScreen = ({ onComplete }: SplashScreenProps) => {
           </div>
           
           {/* Loading Percentage */}
-          <div className="text-white/60 text-xs">
-            {loadingProgress}%
+          <div className="text-white/60 text-xs font-medium">
+            {Math.round(loadingProgress)}%
           </div>
         </div>
 
@@ -132,6 +152,27 @@ const EnhancedSplashScreen = ({ onComplete }: SplashScreenProps) => {
           <div className="w-3 h-3 bg-yellow-300/60 rounded-full animate-bounce"></div>
           <div className="w-3 h-3 bg-orange-300/60 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
           <div className="w-3 h-3 bg-green-300/60 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+        </div>
+      </div>
+
+      {/* Bottom Navigation */}
+      <div className={`px-6 pb-8 transition-all duration-500 ${showBottomNav ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className="flex justify-between items-center">
+          <Button 
+            variant="ghost" 
+            className="text-white/80 hover:text-white hover:bg-white/10"
+            onClick={handleSkip}
+          >
+            Skip
+          </Button>
+          <Button 
+            variant="secondary" 
+            className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+            onClick={handleNext}
+            disabled={loadingProgress < 100}
+          >
+            Next
+          </Button>
         </div>
       </div>
     </div>

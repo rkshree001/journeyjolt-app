@@ -4,16 +4,16 @@ import EnhancedOnboardingScreen from "./EnhancedOnboardingScreen";
 import AuthScreen from "./AuthScreen";
 import HomeScreen from "./HomeScreen";
 import RoutePlanningScreen from "./RoutePlanningScreen";
-import StayPlanningScreen from "./StayPlanningScreen";
-import ItineraryBuilderScreen from "./ItineraryBuilderScreen";
+import EnhancedStayPlanningScreen from "./EnhancedStayPlanningScreen";
+import EnhancedItineraryBuilderScreen from "./EnhancedItineraryBuilderScreen";
 import ExpenseTrackerScreen from "./ExpenseTrackerScreen";
-import TripSummaryScreen from "./TripSummaryScreen";
-import ExploreNearbyScreen from "./ExploreNearbyScreen";
+import EnhancedTripSummaryScreen from "./EnhancedTripSummaryScreen";
+import EnhancedExploreNearbyScreen from "./EnhancedExploreNearbyScreen";
 import BottomNavigation from "./BottomNavigation";
 import MoreScreen from "./MoreScreen";
 import EditProfileScreen from "./EditProfileScreen";
 import AccountSettingsScreen from "./AccountSettingsScreen";
-import TripHistoryScreen from "./TripHistoryScreen";
+import EnhancedTripHistoryScreen from "./EnhancedTripHistoryScreen";
 import PreferencesScreen from "./PreferencesScreen";
 import ExpenseSettingsScreen from "./ExpenseSettingsScreen";
 import HelpSupportScreen from "./HelpSupportScreen";
@@ -95,12 +95,12 @@ const AppRouter = () => {
       case "onboarding": return <EnhancedOnboardingScreen onComplete={handleOnboardingComplete} />;
       case "auth": return <AuthScreen onComplete={handleAuthComplete} />;
       case "home": return <HomeScreen onCreateTrip={handleCreateTrip} onShowProfile={handleShowProfile} onShowExplore={handleShowExplore} />;
-      case "route": return <RoutePlanningScreen onNext={() => setCurrentState("itinerary")} onBack={handleBack} tripData={tripData} />;
-      case "itinerary": return <ItineraryBuilderScreen onNext={() => setCurrentState("expense")} onBack={handleBack} stayDays={2} />;
-      case "expense": return <ExpenseTrackerScreen onNext={() => setCurrentState("home")} onBack={handleBack} />;
-      case "explore": return <ExploreNearbyScreen onBack={handleBack} />;
-      case "summary": return <TripSummaryScreen onBack={handleBack} onComplete={() => setCurrentState("home")} />;
-      case "stay": return <StayPlanningScreen onNext={() => setCurrentState("itinerary")} onBack={handleBack} />;
+      case "route": return <RoutePlanningScreen onNext={() => setCurrentState("stay")} onBack={handleBack} tripData={tripData} />;
+      case "itinerary": return <EnhancedItineraryBuilderScreen onNext={() => setCurrentState("expense")} onBack={handleBack} stayDays={2} />;
+      case "expense": return <ExpenseTrackerScreen onNext={() => setCurrentState("summary")} onBack={handleBack} />;
+      case "explore": return <EnhancedExploreNearbyScreen onBack={handleBack} />;
+      case "summary": return <EnhancedTripSummaryScreen onBack={handleBack} onComplete={() => setCurrentState("home")} />;
+      case "stay": return <EnhancedStayPlanningScreen onNext={() => setCurrentState("itinerary")} onBack={handleBack} />;
       case "more": return (
         <MoreScreen 
           onEditProfile={handleEditProfile}
@@ -119,7 +119,7 @@ const AppRouter = () => {
       );
       case "editProfile": return <EditProfileScreen onBack={handleBack} />;
       case "accountSettings": return <AccountSettingsScreen onBack={handleBack} />;
-      case "tripHistory": return <TripHistoryScreen onBack={handleBack} />;
+      case "tripHistory": return <EnhancedTripHistoryScreen onBack={handleBack} />;
       case "preferences": return <PreferencesScreen onBack={handleBack} />;
       case "settings": return <ExpenseSettingsScreen onBack={handleBack} />;
       case "helpSupport": return <HelpSupportScreen onBack={handleBack} />;
