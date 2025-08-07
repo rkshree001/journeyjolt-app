@@ -82,9 +82,9 @@ const EnhancedOnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
   const currentData = onboardingData[currentStep];
 
   return (
-    <div className="min-h-screen flex flex-col bg-background overflow-hidden">
+    <div className="h-screen w-screen flex flex-col bg-background overflow-hidden fixed inset-0 z-50">
       {/* Enhanced Progress Bar */}
-      <div className="relative w-full bg-muted h-1">
+      <div className="relative w-full bg-muted h-2 safe-area-inset-top">
         <div 
           className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 ease-out"
           style={{ width: `${((currentStep + 1) / onboardingData.length) * 100}%` }}
@@ -95,7 +95,7 @@ const EnhancedOnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
             <button
               key={index}
               onClick={() => jumpToStep(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`w-4 h-4 rounded-full transition-all duration-300 ${
                 index <= currentStep 
                   ? "bg-primary scale-110" 
                   : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
@@ -178,33 +178,42 @@ const EnhancedOnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
         </div>
       </div>
 
-      {/* Enhanced Navigation */}
-      <div className="relative z-10 px-6 pb-8 bg-gradient-to-t from-black/20 to-transparent">
-        <div className="flex justify-between items-center">
+      {/* Enhanced Navigation - Fixed at bottom */}
+      <div className="relative z-10 px-6 py-6 bg-gradient-to-t from-black/40 via-black/20 to-transparent safe-area-inset-bottom">
+        <div className="flex justify-between items-center max-w-md mx-auto">
           <Button
             variant="ghost"
             onClick={prevStep}
             disabled={currentStep === 0}
-            className="flex items-center gap-2 text-white hover:bg-white/20 disabled:opacity-30 transition-all duration-200"
+            className="flex items-center gap-2 text-white hover:bg-white/20 disabled:opacity-30 transition-all duration-200 min-w-[80px]"
+            size="lg"
           >
             <ChevronLeft className="w-5 h-5" />
             Back
           </Button>
 
-          {/* Skip option */}
-          {currentStep < onboardingData.length - 1 && (
-            <Button
-              variant="ghost"
-              onClick={onComplete}
-              className="text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200"
-            >
-              Skip
-            </Button>
-          )}
+          {/* Skip option - always visible for clarity */}
+          <div className="flex flex-col items-center gap-2">
+            {currentStep < onboardingData.length - 1 && (
+              <Button
+                variant="ghost"
+                onClick={onComplete}
+                className="text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200 text-sm"
+                size="sm"
+              >
+                Skip
+              </Button>
+            )}
+            
+            {/* Step indicator */}
+            <div className="text-white/50 text-sm font-medium">
+              {currentStep + 1} of {onboardingData.length}
+            </div>
+          </div>
 
           <Button
             onClick={nextStep}
-            className="flex items-center gap-2 bg-white text-gray-900 hover:bg-white/90 shadow-lg px-8 transition-all duration-200 hover:scale-105"
+            className="flex items-center gap-2 bg-white text-gray-900 hover:bg-white/90 shadow-lg px-6 transition-all duration-200 hover:scale-105 min-w-[100px]"
             size="lg"
           >
             {currentStep === onboardingData.length - 1 ? (
