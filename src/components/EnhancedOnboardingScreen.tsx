@@ -178,41 +178,46 @@ const EnhancedOnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
         </div>
       </div>
 
-      {/* Enhanced Navigation - Fixed at bottom with proper button styling */}
-      <div className="relative z-10 px-6 py-6 bg-gradient-to-t from-black/60 via-black/30 to-transparent safe-area-inset-bottom">
-        <div className="flex justify-between items-center max-w-md mx-auto gap-4">
+      {/* Enhanced Navigation - Fixed at bottom with better visibility */}
+      <div className="absolute bottom-0 left-0 right-0 z-20 px-6 py-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+        <div className="flex justify-between items-center w-full max-w-screen-sm mx-auto">
+          {/* Back Button */}
           <Button
-            variant="outline"
+            variant="outline" 
             onClick={prevStep}
             disabled={currentStep === 0}
-            className="flex items-center gap-2 bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/50 disabled:opacity-30 transition-all duration-200 backdrop-blur-sm"
+            className="flex items-center gap-2 bg-white/20 border-white/40 text-white hover:bg-white/30 hover:border-white/60 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 backdrop-blur-md shadow-lg font-medium px-6 py-3 rounded-full"
             size="lg"
           >
             <ChevronLeft className="w-5 h-5" />
             Back
           </Button>
 
-          {/* Center content with skip and progress */}
-          <div className="flex flex-col items-center gap-2">
+          {/* Center Section - Skip and Progress */}
+          <div className="flex flex-col items-center gap-3">
+            {/* Skip Button - only show if not on last step */}
             {currentStep < onboardingData.length - 1 && (
               <Button
                 variant="ghost"
                 onClick={onComplete}
-                className="text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 text-sm px-4 py-1 h-auto"
+                className="text-white/90 hover:text-white hover:bg-white/20 transition-all duration-300 text-sm px-4 py-2 rounded-full backdrop-blur-sm font-medium"
               >
                 Skip
               </Button>
             )}
             
-            {/* Step indicator */}
-            <div className="text-white/60 text-xs font-medium">
-              {currentStep + 1} of {onboardingData.length}
+            {/* Step Progress Indicator */}
+            <div className="bg-white/20 backdrop-blur-md rounded-full px-4 py-2">
+              <span className="text-white font-medium text-sm">
+                {currentStep + 1} of {onboardingData.length}
+              </span>
             </div>
           </div>
 
+          {/* Next/Get Started Button */}
           <Button
             onClick={nextStep}
-            className="flex items-center gap-2 bg-white text-gray-900 hover:bg-white/90 shadow-lg transition-all duration-200 hover:scale-105 font-semibold"
+            className="flex items-center gap-2 bg-white text-gray-900 hover:bg-gray-100 shadow-xl transition-all duration-300 hover:scale-105 font-semibold px-6 py-3 rounded-full"
             size="lg"
           >
             {currentStep === onboardingData.length - 1 ? (
