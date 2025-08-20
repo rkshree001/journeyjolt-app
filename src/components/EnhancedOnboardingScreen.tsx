@@ -83,6 +83,17 @@ const EnhancedOnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
 
   return (
     <div className="h-screen w-screen flex flex-col bg-background overflow-hidden fixed inset-0 z-50">
+      {/* Skip Button - Top Right */}
+      {currentStep < onboardingData.length - 1 && (
+        <Button
+          variant="ghost"
+          onClick={onComplete}
+          className="absolute top-4 right-4 z-30 text-white/90 hover:text-white hover:bg-white/20 transition-all duration-300 text-sm px-4 py-2 rounded-full backdrop-blur-sm font-medium shadow-lg border border-white/20"
+        >
+          Skip
+        </Button>
+      )}
+      
       {/* Enhanced Progress Bar */}
       <div className="relative w-full bg-muted h-2 safe-area-inset-top">
         <div 
@@ -193,19 +204,8 @@ const EnhancedOnboardingScreen = ({ onComplete }: OnboardingScreenProps) => {
             Back
           </Button>
 
-          {/* Center Section - Skip and Progress */}
+          {/* Center Section - Progress */}
           <div className="flex flex-col items-center gap-3">
-            {/* Skip Button - only show if not on last step */}
-            {currentStep < onboardingData.length - 1 && (
-              <Button
-                variant="ghost"
-                onClick={onComplete}
-                className="text-white/90 hover:text-white hover:bg-white/20 transition-all duration-300 text-sm px-4 py-2 rounded-full backdrop-blur-sm font-medium"
-              >
-                Skip
-              </Button>
-            )}
-            
             {/* Step Progress Indicator */}
             <div className="bg-white/20 backdrop-blur-md rounded-full px-4 py-2">
               <span className="text-white font-medium text-sm">
