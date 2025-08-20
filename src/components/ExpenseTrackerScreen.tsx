@@ -36,6 +36,7 @@ import {
   getExpensesByDateRange,
   getExpenseSummary
 } from "@/utils/expenseCalculations";
+import { mockExpenses, mockUsers, getCurrentUser } from "@/data";
 
 interface User {
   id: string;
@@ -68,61 +69,35 @@ interface ExpenseTrackerScreenProps {
   onBack: () => void;
 }
 
-const mockUsers: User[] = [
-  { id: "1", name: "You", avatar: "ME" },
-  { id: "2", name: "John Doe", avatar: "JD" },
-  { id: "3", name: "Sarah Wilson", avatar: "SW" },
-  { id: "4", name: "Mike Chen", avatar: "MC" }
-];
+// Convert mock data to component format
+const convertUsersToComponentFormat = () => {
+  return mockUsers.map(user => ({
+    id: user.id,
+    name: user.name,
+    avatar: user.name.split(' ').map(n => n[0]).join('').toUpperCase()
+  }));
+};
 
-const mockExpenses: Expense[] = [
-  {
-    id: "1",
-    title: "Lunch at Local Restaurant",
-    amount: 1200,
-    paidBy: "1",
-    date: new Date(2024, 11, 15).toISOString(),
-    category: "Food & Dining",
-    splitType: "equally",
-    splitDetails: [
-      { userId: "1", amount: 400 },
-      { userId: "2", amount: 400 },
-      { userId: "3", amount: 400 }
-    ],
-    participants: ["1", "2", "3"]
-  },
-  {
-    id: "2", 
-    title: "Hotel Room Night 1",
-    amount: 2400,
-    paidBy: "2",
-    date: new Date(2024, 11, 15).toISOString(),
-    category: "Accommodation",
-    splitType: "equally",
-    splitDetails: [
-      { userId: "1", amount: 600 },
-      { userId: "2", amount: 600 },
-      { userId: "3", amount: 600 },
-      { userId: "4", amount: 600 }
-    ],
-    participants: ["1", "2", "3", "4"]
-  },
-  {
-    id: "3",
-    title: "Uber to Heritage Fort", 
-    amount: 350,
-    paidBy: "3",
-    date: new Date(2024, 11, 16).toISOString(),
-    category: "Transportation",
-    splitType: "equally",
-    splitDetails: [
-      { userId: "1", amount: 117 },
-      { userId: "2", amount: 117 },
-      { userId: "3", amount: 116 }
-    ],
-    participants: ["1", "2", "3"]
-  }
-];
+const convertExpensesToComponentFormat = () => {
+  return mockExpenses.map(expense => ({
+    id: expense.id,
+    title: expense.title,
+    amount: expense.amount,
+    paidBy: expense.paidBy,
+    date: expense.date,
+    category: expense.category,
+    notes: expense.description,
+    splitType: "equally" as const,
+    splitDetails: expense.splitBetween.map(userId => ({
+      userId,
+      amount: expense.amount / expense.splitBetween.length
+    })),
+    participants: expense.splitBetween
+  }));
+};
+
+const componentUsers = convertUsersToComponentFormat();
+const componentExpenses = convertExpensesToComponentFormat();
 
 const CATEGORIES = [
   "Food & Dining",
@@ -143,7 +118,7 @@ const categoryIcons = {
 };
 
 const ExpenseTrackerScreen = ({ onNext, onBack }: ExpenseTrackerScreenProps) => {
-  const [expenses, setExpenses] = useState<Expense[]>(mockExpenses);
+  const [expenses, setExpenses] = useState<Expense[]>(componentExpenses);
   const [currentScreen, setCurrentScreen] = useState<"main" | "add" | "filter" | "groups" | "export" | "settings">("main");
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [filters, setFilters] = useState<FilterState>({
@@ -180,8 +155,8 @@ const ExpenseTrackerScreen = ({ onNext, onBack }: ExpenseTrackerScreenProps) => 
     return true;
   });
 
-  const balances = calculateUserBalances(filteredExpenses, mockUsers);
-  const settlements = calculateSettlements(balances, mockUsers);
+  const balances = calculateUserBalances(filteredExpenses, componentUsers);
+  const settlements = calculateSettlements(balances, componentUsers);
   const summary = getExpenseSummary(filteredExpenses);
 
   const handleAddExpense = (expense: Expense) => {
@@ -209,8 +184,8 @@ const ExpenseTrackerScreen = ({ onNext, onBack }: ExpenseTrackerScreenProps) => 
       <EnhancedAddExpenseScreen
         onBack={() => setCurrentScreen("main")}
         onSave={handleAddExpense}
-        users={mockUsers}
-        groupCurrency="INR"
+        users={componentUsers}
+        groupCurrency="USD"
       />
     );
   }
@@ -220,7 +195,7 @@ const ExpenseTrackerScreen = ({ onNext, onBack }: ExpenseTrackerScreenProps) => 
       <ExpenseFilterScreen
         onBack={() => setCurrentScreen("main")}
         onApplyFilters={handleApplyFilters}
-        users={mockUsers}
+        users={componentUsers}
         categories={CATEGORIES}
         currentFilters={filters}
       />

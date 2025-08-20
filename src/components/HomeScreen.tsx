@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { 
   MapPin, 
   Calendar, 
@@ -13,8 +14,12 @@ import {
   Navigation,
   Plus,
   History,
-  User
+  User,
+  Wallet,
+  TrendingUp,
+  Activity
 } from "lucide-react";
+import { mockTrips, getCurrentTrip, getPlanningTrips, getCurrentUser, getDashboardStats } from "@/data";
 
 interface HomeScreenProps {
   onCreateTrip: () => void;
@@ -33,6 +38,11 @@ const HomeScreen = ({ onCreateTrip, onShowProfile, onShowExplore }: HomeScreenPr
   const [selectedMode, setSelectedMode] = useState("car");
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
+  
+  const currentUser = getCurrentUser();
+  const currentTrip = getCurrentTrip();
+  const planningTrips = getPlanningTrips();
+  const stats = getDashboardStats();
 
   return (
     <div className="min-h-screen bg-gradient-card">
@@ -41,10 +51,19 @@ const HomeScreen = ({ onCreateTrip, onShowProfile, onShowExplore }: HomeScreenPr
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-2xl font-bold text-white">TripWisePay</h1>
-            <p className="text-white/80">Plan your next adventure</p>
+            <p className="text-white/80">Welcome back, {currentUser.name.split(' ')[0]}!</p>
           </div>
           <Button variant="glass" size="icon" className="text-white" onClick={onShowProfile}>
-            <User className="w-5 h-5" />
+            <img 
+              src={currentUser.avatar} 
+              alt={currentUser.name}
+              className="w-5 h-5 rounded-full object-cover"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.nextElementSibling?.classList.remove('hidden');
+              }}
+            />
+            <User className="w-5 h-5 hidden" />
           </Button>
         </div>
 
@@ -133,26 +152,104 @@ const HomeScreen = ({ onCreateTrip, onShowProfile, onShowExplore }: HomeScreenPr
         </Card>
       </div>
 
-      {/* Recent trips section */}
-      <div className="px-6 py-8">
+      {/* Stats overview */}
+      <div className="px-6 py-4">
+        <div className="grid grid-cols-3 gap-3">
+          <Card className="shadow-soft">
+            <CardContent className="p-4 text-center">
+              <TrendingUp className="w-6 h-6 text-primary mx-auto mb-2" />
+              <p className="text-lg font-bold">${stats.totalSpent.toLocaleString()}</p>
+              <p className="text-xs text-muted-foreground">Total Spent</p>
+            </CardContent>
+          </Card>
+          <Card className="shadow-soft">
+            <CardContent className="p-4 text-center">
+              <Activity className="w-6 h-6 text-secondary mx-auto mb-2" />
+              <p className="text-lg font-bold">{stats.countriesVisited}</p>
+              <p className="text-xs text-muted-foreground">Countries</p>
+            </CardContent>
+          </Card>
+          <Card className="shadow-soft">
+            <CardContent className="p-4 text-center">
+              <User className="w-6 h-6 text-accent mx-auto mb-2" />
+              <p className="text-lg font-bold">{stats.friendsConnected}</p>
+              <p className="text-xs text-muted-foreground">Friends</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Current active trip */}
+      {currentTrip && (
+        <div className="px-6 pb-4">
+          <h2 className="text-lg font-bold text-foreground mb-3">Current Trip</h2>
+          <Card className="shadow-medium bg-gradient-hero">
+            <CardContent className="p-4">
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <h3 className="font-bold text-white text-lg">{currentTrip.title}</h3>
+                  <p className="text-white/80 text-sm">{currentTrip.destination}</p>
+                </div>
+                <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+                  Active
+                </Badge>
+              </div>
+              <div className="grid grid-cols-2 gap-4 text-white/90 text-sm">
+                <div>
+                  <p className="font-medium">Budget: ${currentTrip.budget.toLocaleString()}</p>
+                  <p>Spent: ${currentTrip.spent.toLocaleString()}</p>
+                </div>
+                <div>
+                  <p className="font-medium">{currentTrip.participants.length} Members</p>
+                  <p>{new Date(currentTrip.startDate).toLocaleDateString()} - {new Date(currentTrip.endDate).toLocaleDateString()}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Planning trips */}
+      <div className="px-6 py-4">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-foreground">Recent Trips</h2>
+          <h2 className="text-lg font-bold text-foreground">Planning</h2>
           <Button variant="ghost" size="sm" onClick={onShowExplore}>
             <History className="w-4 h-4" />
-            Explore
+            View All
           </Button>
         </div>
 
-        {/* Empty state for now */}
-        <Card className="shadow-soft">
-          <CardContent className="p-8 text-center">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-              <MapPin className="w-8 h-8 text-muted-foreground" />
-            </div>
-            <h3 className="font-semibold text-foreground mb-2">No trips yet</h3>
-            <p className="text-muted-foreground text-sm">Create your first trip to get started!</p>
-          </CardContent>
-        </Card>
+        {planningTrips.length > 0 ? (
+          <div className="space-y-3">
+            {planningTrips.slice(0, 2).map((trip) => (
+              <Card key={trip.id} className="shadow-soft">
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-foreground">{trip.title}</h3>
+                      <p className="text-sm text-muted-foreground">{trip.destination}</p>
+                      <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                        <span>${trip.budget.toLocaleString()} budget</span>
+                        <span>{trip.participants.length} members</span>
+                      </div>
+                    </div>
+                    <Badge variant="outline">Planning</Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Card className="shadow-soft">
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <MapPin className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">No trips planned</h3>
+              <p className="text-muted-foreground text-sm">Create your first trip to get started!</p>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
