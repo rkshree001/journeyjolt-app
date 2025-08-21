@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Plane, AlertCircle } from 'lucide-react';
+import { Loader2, Plane, AlertCircle, Mail, Lock, User, Eye, EyeOff, MapPin, Compass } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 export const AuthPage = () => {
@@ -12,6 +12,8 @@ export const AuthPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [signInData, setSignInData] = useState({
     email: '',
@@ -77,162 +79,264 @@ export const AuthPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted">
-        <div className="flex items-center gap-2">
-          <Loader2 className="h-6 w-6 animate-spin" />
-          <span>Loading...</span>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-hero">
+        <div className="flex flex-col items-center gap-4 text-white">
+          <div className="relative">
+            <div className="w-16 h-16 bg-white/20 backdrop-blur-lg rounded-full flex items-center justify-center animate-pulse">
+              <Plane className="w-8 h-8" />
+            </div>
+            <div className="absolute inset-0 animate-spin">
+              <div className="w-16 h-16 border-2 border-white/30 border-t-white/60 rounded-full"></div>
+            </div>
+          </div>
+          <span className="font-medium">Loading your journey...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="bg-primary rounded-full p-2">
-              <Plane className="h-6 w-6 text-primary-foreground" />
+    <div className="min-h-screen bg-gradient-hero flex flex-col">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
+        <div className="absolute top-40 right-16 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-20 left-20 w-24 h-24 bg-white/8 rounded-full blur-xl"></div>
+      </div>
+
+      <div className="relative flex-1 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/15 backdrop-blur-lg rounded-full shadow-glow mb-6">
+              <div className="relative">
+                <Plane className="w-10 h-10 text-white" />
+                <MapPin className="w-4 h-4 text-white absolute -bottom-1 -right-1 animate-pulse" />
+              </div>
             </div>
-            <h1 className="text-2xl font-bold">TripWise Pay</h1>
+            <h1 className="text-4xl font-bold text-white mb-2">TripWisePay</h1>
+            <p className="text-white/80 text-lg">Your Travel Companion</p>
           </div>
-          <CardTitle>Welcome</CardTitle>
-          <CardDescription>
-            Sign in to your account or create a new one to start tracking your travel expenses
-          </CardDescription>
-        </CardHeader>
 
-        <CardContent>
-          <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="signin">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            </TabsList>
+          {/* Auth Card */}
+          <Card className="shadow-strong bg-white/95 backdrop-blur-sm border-0">
+            <CardContent className="p-6">
+              <Tabs defaultValue="signin" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-6 bg-muted/50">
+                  <TabsTrigger 
+                    value="signin"
+                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  >
+                    Sign In
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="signup"
+                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  >
+                    Sign Up
+                  </TabsTrigger>
+                </TabsList>
 
-            {error && (
-              <Alert variant="destructive" className="mt-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+                {error && (
+                  <Alert variant="destructive" className="mb-4 bg-destructive/10 border-destructive/20">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
 
-            {success && (
-              <Alert className="mt-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{success}</AlertDescription>
-              </Alert>
-            )}
+                {success && (
+                  <Alert className="mb-4 bg-accent/10 border-accent/20">
+                    <AlertCircle className="h-4 w-4 text-accent" />
+                    <AlertDescription className="text-accent-foreground">{success}</AlertDescription>
+                  </Alert>
+                )}
 
-            <TabsContent value="signin">
-              <form onSubmit={handleSignIn} className="space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="signin-email" className="text-sm font-medium">
-                    Email
-                  </label>
-                  <Input
-                    id="signin-email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={signInData.email}
-                    onChange={(e) => setSignInData({ ...signInData, email: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="signin-password" className="text-sm font-medium">
-                    Password
-                  </label>
-                  <Input
-                    id="signin-password"
-                    type="password"
-                    placeholder="Enter your password"
-                    value={signInData.password}
-                    onChange={(e) => setSignInData({ ...signInData, password: e.target.value })}
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Signing In...
-                    </>
-                  ) : (
-                    'Sign In'
-                  )}
-                </Button>
-              </form>
-            </TabsContent>
+                <TabsContent value="signin" className="space-y-4">
+                  <form onSubmit={handleSignIn} className="space-y-4">
+                    <div className="space-y-2">
+                      <label htmlFor="signin-email" className="text-sm font-medium text-foreground">
+                        Email Address
+                      </label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                        <Input
+                          id="signin-email"
+                          type="email"
+                          placeholder="Enter your email"
+                          value={signInData.email}
+                          onChange={(e) => setSignInData({ ...signInData, email: e.target.value })}
+                          className="pl-10 h-12 bg-background/50 border-border/50 focus:bg-background"
+                          required
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <label htmlFor="signin-password" className="text-sm font-medium text-foreground">
+                        Password
+                      </label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                        <Input
+                          id="signin-password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Enter your password"
+                          value={signInData.password}
+                          onChange={(e) => setSignInData({ ...signInData, password: e.target.value })}
+                          className="pl-10 pr-10 h-12 bg-background/50 border-border/50 focus:bg-background"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-3 w-5 h-5 text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
+                      </div>
+                    </div>
 
-            <TabsContent value="signup">
-              <form onSubmit={handleSignUp} className="space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="signup-name" className="text-sm font-medium">
-                    Full Name
-                  </label>
-                  <Input
-                    id="signup-name"
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={signUpData.name}
-                    onChange={(e) => setSignUpData({ ...signUpData, name: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="signup-email" className="text-sm font-medium">
-                    Email
-                  </label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={signUpData.email}
-                    onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="signup-password" className="text-sm font-medium">
-                    Password
-                  </label>
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    placeholder="Create a password (min 6 characters)"
-                    value={signUpData.password}
-                    onChange={(e) => setSignUpData({ ...signUpData, password: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="signup-confirm" className="text-sm font-medium">
-                    Confirm Password
-                  </label>
-                  <Input
-                    id="signup-confirm"
-                    type="password"
-                    placeholder="Confirm your password"
-                    value={signUpData.confirmPassword}
-                    onChange={(e) => setSignUpData({ ...signUpData, confirmPassword: e.target.value })}
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Creating Account...
-                    </>
-                  ) : (
-                    'Create Account'
-                  )}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+                    <Button 
+                      type="submit" 
+                      variant="hero" 
+                      size="lg" 
+                      className="w-full mt-6" 
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Signing In...
+                        </>
+                      ) : (
+                        <>
+                          <Compass className="mr-2 h-4 w-4" />
+                          Start Your Journey
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                </TabsContent>
+
+                <TabsContent value="signup" className="space-y-4">
+                  <form onSubmit={handleSignUp} className="space-y-4">
+                    <div className="space-y-2">
+                      <label htmlFor="signup-name" className="text-sm font-medium text-foreground">
+                        Full Name
+                      </label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                        <Input
+                          id="signup-name"
+                          type="text"
+                          placeholder="Enter your full name"
+                          value={signUpData.name}
+                          onChange={(e) => setSignUpData({ ...signUpData, name: e.target.value })}
+                          className="pl-10 h-12 bg-background/50 border-border/50 focus:bg-background"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="signup-email" className="text-sm font-medium text-foreground">
+                        Email Address
+                      </label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                        <Input
+                          id="signup-email"
+                          type="email"
+                          placeholder="Enter your email"
+                          value={signUpData.email}
+                          onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
+                          className="pl-10 h-12 bg-background/50 border-border/50 focus:bg-background"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="signup-password" className="text-sm font-medium text-foreground">
+                        Password
+                      </label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                        <Input
+                          id="signup-password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Create a secure password"
+                          value={signUpData.password}
+                          onChange={(e) => setSignUpData({ ...signUpData, password: e.target.value })}
+                          className="pl-10 pr-10 h-12 bg-background/50 border-border/50 focus:bg-background"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-3 w-5 h-5 text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="signup-confirm" className="text-sm font-medium text-foreground">
+                        Confirm Password
+                      </label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
+                        <Input
+                          id="signup-confirm"
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="Confirm your password"
+                          value={signUpData.confirmPassword}
+                          onChange={(e) => setSignUpData({ ...signUpData, confirmPassword: e.target.value })}
+                          className="pl-10 pr-10 h-12 bg-background/50 border-border/50 focus:bg-background"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3 top-3 w-5 h-5 text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      variant="hero" 
+                      size="lg" 
+                      className="w-full mt-6" 
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Creating Account...
+                        </>
+                      ) : (
+                        <>
+                          <Plane className="mr-2 h-4 w-4" />
+                          Begin Adventure
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+
+          {/* Footer message */}
+          <p className="text-center text-white/70 text-sm mt-6">
+            Track expenses • Plan routes • Share with friends
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

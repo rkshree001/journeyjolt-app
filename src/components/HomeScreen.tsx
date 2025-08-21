@@ -19,7 +19,9 @@ import {
   TrendingUp,
   Activity
 } from "lucide-react";
-import { mockTrips, getCurrentTrip, getPlanningTrips, getCurrentUser, getDashboardStats } from "@/data";
+import { useAuth } from "@/hooks/useAuth";
+import { useTrips } from "@/hooks/useTrips";
+import { mockTrips, getCurrentTrip, getPlanningTrips, getDashboardStats } from "@/data";
 
 interface HomeScreenProps {
   onCreateTrip: () => void;
@@ -35,11 +37,19 @@ const travelModes = [
 ];
 
 const HomeScreen = ({ onCreateTrip, onShowProfile, onShowExplore }: HomeScreenProps) => {
+  const { profile } = useAuth();
+  const { trips } = useTrips();
   const [selectedMode, setSelectedMode] = useState("car");
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
   
-  const currentUser = getCurrentUser();
+  // Use real data when available, fallback to mock data for demo
+  const currentUser = profile || { 
+    name: 'Travel Explorer', 
+    email: 'user@example.com', 
+    avatar: '/placeholder.svg' 
+  };
+  
   const currentTrip = getCurrentTrip();
   const planningTrips = getPlanningTrips();
   const stats = getDashboardStats();
