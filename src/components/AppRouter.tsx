@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { AuthPage } from "./AuthPage";
 import EnhancedSplashScreen from "./EnhancedSplashScreen";
 import EnhancedOnboardingScreen from "./EnhancedOnboardingScreen";
-import AuthScreen from "./AuthScreen";
 import HomeScreen from "./HomeScreen";
 import RoutePlanningScreen from "./RoutePlanningScreen";
 import EnhancedStayPlanningScreen from "./EnhancedStayPlanningScreen";
@@ -38,6 +39,7 @@ type AppState =
   | "stay";
 
 const AppRouter = () => {
+  const { isAuthenticated, loading, signOut } = useAuth();
   const [currentState, setCurrentState] = useState<AppState>("splash");
   const [tripData] = useState({
     from: "",
@@ -47,9 +49,22 @@ const AppRouter = () => {
     time: ""
   });
 
+  // Show loading spinner while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  // Show auth page if not authenticated
+  if (!isAuthenticated) {
+    return <AuthPage />;
+  }
+
   const handleSplashComplete = () => setCurrentState("onboarding");
-  const handleOnboardingComplete = () => setCurrentState("auth");
-  const handleAuthComplete = () => setCurrentState("home");
+  const handleOnboardingComplete = () => setCurrentState("home");
   const handleCreateTrip = () => setCurrentState("route");
   const handleShowProfile = () => setCurrentState("more");
   const handleShowExplore = () => setCurrentState("explore");
@@ -61,7 +76,10 @@ const AppRouter = () => {
   const handlePreferences = () => setCurrentState("preferences");
   const handleSettings = () => setCurrentState("settings");
   const handleHelpSupport = () => setCurrentState("helpSupport");
-  const handleLogout = () => setCurrentState("auth");
+  const handleLogout = async () => {
+    await signOut();
+    setCurrentState("splash");
+  };
 
   const handleBack = () => {
     if (["route", "itinerary", "expense", "more", "explore", "summary", "stay"].includes(currentState)) {
@@ -72,11 +90,11 @@ const AppRouter = () => {
   };
 
   const handleTabChange = (tab: string) => {
-    if (["splash", "onboarding", "auth"].includes(currentState)) return;
+    if (["splash", "onboarding"].includes(currentState)) return;
     setCurrentState(tab as AppState);
   };
 
-  const showBottomNav = !["splash", "onboarding", "auth", "editProfile", "accountSettings", "tripHistory", "preferences", "settings", "helpSupport"].includes(currentState);
+  const showBottomNav = !["splash", "onboarding", "editProfile", "accountSettings", "tripHistory", "preferences", "settings", "helpSupport"].includes(currentState);
   
   const getActiveTab = () => {
     switch (currentState) {
@@ -93,7 +111,6 @@ const AppRouter = () => {
     switch (currentState) {
       case "splash": return <EnhancedSplashScreen onComplete={handleSplashComplete} />;
       case "onboarding": return <EnhancedOnboardingScreen onComplete={handleOnboardingComplete} />;
-      case "auth": return <AuthScreen onComplete={handleAuthComplete} />;
       case "home": return <HomeScreen onCreateTrip={handleCreateTrip} onShowProfile={handleShowProfile} onShowExplore={handleShowExplore} />;
       case "route": return <RoutePlanningScreen onNext={() => setCurrentState("stay")} onBack={handleBack} tripData={tripData} />;
       case "itinerary": return <EnhancedItineraryBuilderScreen onNext={() => setCurrentState("expense")} onBack={handleBack} stayDays={2} />;
