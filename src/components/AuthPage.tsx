@@ -8,7 +8,7 @@ import { Loader2, Plane, AlertCircle, Mail, Lock, User, Eye, EyeOff, MapPin, Com
 import { useAuth } from '@/hooks/useAuth';
 
 export const AuthPage = () => {
-  const { signIn, signUp, loading } = useAuth();
+  const { signIn, signUp, signInAsGuest, loading } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -326,8 +326,35 @@ export const AuthPage = () => {
                       )}
                     </Button>
                   </form>
-                </TabsContent>
+                 </TabsContent>
               </Tabs>
+
+              {/* Guest Login Section */}
+              <div className="mt-6">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-muted-foreground/20"></span>
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-white px-2 text-muted-foreground">Or</span>
+                  </div>
+                </div>
+                
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="w-full mt-4 bg-secondary/50 hover:bg-secondary border-muted-foreground/20"
+                  onClick={signInAsGuest}
+                  disabled={isLoading}
+                >
+                  <User className="mr-2 h-4 w-4" />
+                  Continue as Guest
+                </Button>
+                
+                <p className="text-center text-muted-foreground text-xs mt-2">
+                  Explore the app with limited features
+                </p>
+              </div>
             </CardContent>
           </Card>
 

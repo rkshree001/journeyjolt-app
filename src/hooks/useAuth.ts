@@ -8,6 +8,7 @@ export const useAuth = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
     // Set up auth state listener
@@ -28,6 +29,7 @@ export const useAuth = () => {
           }, 0);
         } else {
           setProfile(null);
+          setIsGuest(false);
         }
         
         setLoading(false);
@@ -90,15 +92,45 @@ export const useAuth = () => {
     return { error };
   };
 
+  const signInAsGuest = () => {
+    setIsGuest(true);
+    setProfile({
+      id: 'guest',
+      name: 'Guest User',
+      email: 'guest@example.com',
+      avatar: null,
+      phone: null,
+      currency: 'USD',
+      language: 'en',
+      theme: 'auto',
+      notifications: true,
+      joined_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      trips_completed: 0,
+      total_spent: 0,
+      countries_visited: 0,
+      friends_connected: 0
+    });
+    setLoading(false);
+  };
+
+  const signOutGuest = () => {
+    setIsGuest(false);
+    setProfile(null);
+  };
+
   return {
     user,
     session,
     profile,
     loading,
+    isGuest,
     signIn,
     signUp,
     signOut,
     resetPassword,
-    isAuthenticated: !!user,
+    signInAsGuest,
+    signOutGuest,
+    isAuthenticated: !!user || isGuest,
   };
 };

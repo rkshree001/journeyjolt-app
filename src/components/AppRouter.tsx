@@ -39,7 +39,7 @@ type AppState =
   | "stay";
 
 const AppRouter = () => {
-  const { isAuthenticated, loading, signOut } = useAuth();
+  const { isAuthenticated, loading, signOut, isGuest, signOutGuest } = useAuth();
   const [currentState, setCurrentState] = useState<AppState>("splash");
   const [tripData] = useState({
     from: "",
@@ -77,7 +77,11 @@ const AppRouter = () => {
   const handleSettings = () => setCurrentState("settings");
   const handleHelpSupport = () => setCurrentState("helpSupport");
   const handleLogout = async () => {
-    await signOut();
+    if (isGuest) {
+      signOutGuest();
+    } else {
+      await signOut();
+    }
     setCurrentState("splash");
   };
 
