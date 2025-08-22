@@ -11,9 +11,12 @@ export const useAuth = () => {
   const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
+    console.log('useAuth: Setting up auth listener');
+    
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('useAuth: Auth state changed', { event, hasSession: !!session });
         setSession(session);
         setUser(session?.user ?? null);
         
@@ -38,6 +41,7 @@ export const useAuth = () => {
 
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('useAuth: Initial session check', { hasSession: !!session });
       setSession(session);
       setUser(session?.user ?? null);
       
@@ -45,6 +49,9 @@ export const useAuth = () => {
         getCurrentUserProfile().then(setProfile).catch(console.error);
       }
       
+      setLoading(false);
+    }).catch((error) => {
+      console.error('useAuth: Error getting session', error);
       setLoading(false);
     });
 
@@ -93,6 +100,7 @@ export const useAuth = () => {
   };
 
   const signInAsGuest = () => {
+    console.log('useAuth: Signing in as guest');
     setIsGuest(true);
     setProfile({
       id: 'guest',

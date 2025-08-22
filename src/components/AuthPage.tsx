@@ -344,7 +344,10 @@ export const AuthPage = () => {
                   variant="outline" 
                   size="lg" 
                   className="w-full mt-4 bg-secondary/50 hover:bg-secondary border-muted-foreground/20"
-                  onClick={signInAsGuest}
+                  onClick={() => {
+                    console.log('Guest login button clicked');
+                    signInAsGuest();
+                  }}
                   disabled={isLoading}
                 >
                   <User className="mr-2 h-4 w-4" />
